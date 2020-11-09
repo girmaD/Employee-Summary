@@ -10,14 +10,6 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
-
-// Write code to use inquirer to gather information about the development team members,
-// and to create objects for each team member (using the correct classes as blueprints!)
-
-// After the user has input all employees desired, call the `render` function (required
-// above) and pass in an array containing all employee objects; the `render` function will
-// generate and return a block of HTML including templated divs for each employee!
-
 // After you have your html, you're now ready to create an HTML file using the HTML
 // returned from the `render` function. Now write it to a file named `team.html` in the
 // `output` folder. You can use the variable `outputPath` above target this location.
@@ -35,8 +27,13 @@ const render = require("./lib/htmlRenderer");
 // for the provided `render` function to work! ```
 
 const employees = [];
+// let combinedData;
 
-const  promptQuestions = () => inquirer.prompt([
+// Write code to use inquirer to gather information about the development team members,
+// and to create objects for each team member (using the correct classes as blueprints!)
+
+//Prompt Manager related questions to a user
+const  promptManager = () => inquirer.prompt([
     {
         type: 'input',
         name: 'managerName',
@@ -57,39 +54,9 @@ const  promptQuestions = () => inquirer.prompt([
         name: 'managerOffice',
         message: "What is your manager's office number?"
     }   
-]);
-
-const addTeamMember = () => inquirer.prompt([
-    {
-        type: 'list',
-        name: 'empType',
-        message: "Which type of team members would you like to add?",
-        choices: ['Engineer', 'Intern', 'I do not want to add more team members']
-    }
 ])
-.then((type) => {
-    switch(type.empType){
-        case 'Engineer':
-            promptEngineer()
-            .then((data) =>{
-                const engineer = new Engineer(data.engName, data.engId, data.engEmail, data.engGit)
-                employees.push(engineer)
-                addTeamMember()
-            })
-            break;
-        case 'Intern':
-            promptIntern()
-            .then((data) =>{
-                const intern = new Intern(data.intName, data.intId, data.intEmail, data.intSchool)
-                employees.push(intern)
-                addTeamMember()
-            })
-            break;
-        default:
-            console.log('Thank you for providing infomation')
-    }
-})
 
+//Prompt Engineer related question to a user
 const promptEngineer = () => inquirer.prompt([
     {
         type: 'input',
@@ -113,6 +80,7 @@ const promptEngineer = () => inquirer.prompt([
     },
 ]); 
 
+//Prompt Intern related questions to a user
 const promptIntern = () => inquirer.prompt([
     {
         type: 'input',
@@ -136,14 +104,69 @@ const promptIntern = () => inquirer.prompt([
     },
 ]);
 
+
+//Prompt addTeamMember question to a user
+const addTeamMember = () => inquirer.prompt([
+    {
+        type: 'list',
+        name: 'empType',
+        message: "Which type of team member would you like to add?",
+        choices: ['Engineer', 'Intern', 'I do not want to add more team members']
+    }
+])
+.then((type) => {
+    switch(type.empType){
+        case 'Engineer':
+            promptEngineer()
+            .then((data) =>{
+                const engineer = new Engineer(data.engName, data.engId, data.engEmail, data.engGit)
+                employees.push(engineer)
+                addTeamMember()
+            })
+            break;
+        case 'Intern':
+            promptIntern()
+            .then((data) =>{
+                const intern = new Intern(data.intName, data.intId, data.intEmail, data.intSchool)
+                employees.push(intern)
+                addTeamMember()
+            })
+            break;
+        default:
+            console.log('Thank you for providing valuable infomation')
+            // render(employees);
+            createHTML();
+    }
+})
+
 //====================================//
 console.log(`Please build your team`)
 
-promptQuestions()
-.then((data) => {
-   const manager = new Manager(data.managerName, data.managerId, data.managerEmail, data.managerOffice)
-   employees.push(manager);
-   addTeamMember();
-   console.log(...employees);
-   console.log(employees);
-})
+//Using async and await to make sure - the next function runs after the first function's promise is recolved.
+const init = async () => {
+    //Using try catch to handle error
+    try {
+        let data =  await promptManager()
+        const manager = new Manager(data.managerName, data.managerId, data.managerEmail, data.managerOffice)
+        employees.push(manager);
+        console.log(manager)
+
+        await addTeamMember()         
+    } catch(e) {
+        console.log("Here is the error", e)
+    }
+}
+
+init();
+
+// After the user has input all employees desired, call the `render` function (required
+// above) and pass in an array containing all employee objects; the `render` function will
+// generate and return a block of HTML including templated divs for each employee! 
+
+//=====================================//
+const createHTML = () => {
+    fs.writeFile(outputPath, render(employees), (err) =>{
+        if(err) throw err;
+        console.log('html successfully created');
+    })
+}

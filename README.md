@@ -5,8 +5,8 @@
 * View the [Github Repo](https://github.com/girmaD/Employee-Summary)
 
 ## Description
-This application builds a Node CLI that takes in information about employees and generates an HTML webpage that displays summaries for each each employee. 
-This application is made using inquirer package to prompt questions about important information about employees.
+This application is a Node CLI application that takes in information about employees and generates an HTML webpage that displays summaries for each each employee. 
+This application is made using inquirer package to prompt questions about important information about employees. Classes of Employee, Manager, Engineer and Intern were created. Each employee added by a user on the command line are made to be instances of either of these created classes depending on whether the employee added is a manager, an engineer or an intern. 
 Since testing is a key piece in making a code maintainable, unit tests were made on all important pieces of codes.
 
 ## Table Of Contents 

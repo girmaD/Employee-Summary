@@ -168,9 +168,6 @@ const createHTML = () => {
     })
 }
 
-//====================================//
-console.log(`Please build your team`)
-
 //Using async and await to make sure - the next function runs after the first function's promise is resolved.
 const init = async () => {
     //Using try catch to handle error
@@ -189,5 +186,8 @@ const init = async () => {
         console.log("Here is the error", e)
     }
 }
+
+//====================================//
+console.log(`Please build your team`)
 // call init function to start the whole thing
 init();

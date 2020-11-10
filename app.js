@@ -13,6 +13,17 @@ const { type } = require("os");
 
 //empty array to store employees' from the CLI answers
 const employees = [];
+// an empty array to store employee ids
+const idArr = [];
+
+//A function to make sure that each id provided by a user for each employee is unique
+const uniqueId = id => {
+    if(idArr.includes(id)) {
+        console.log(". please enter a unique id for each team member");
+        return false
+    }
+    return true
+}
 
 //A regEx to validate email
 //source - https://gist.github.com/Amitabh-K/ae073eea3d5207efaddffde19b1618e8
@@ -30,7 +41,7 @@ function nonEmpty(answer) {
     if(answer !== '') {
         return true
     } else {
-        console.log('Please enter an answer to proceed')
+        console.log('. Please enter an answer to proceed')
         return false
     }
 }
@@ -47,7 +58,8 @@ const  promptManager = () => inquirer.prompt([
         type: 'input',
         name: 'id',
         message: "What is your manager's id?",
-        validate: nonEmpty        
+        validate: nonEmpty,
+        validate: uniqueId        
     },
     {
         type: 'input',
@@ -75,7 +87,8 @@ const promptTeamMember = () => inquirer.prompt([
         type: 'input',
         name: 'id',
         message: `What is this team member's id?`, 
-        validate: nonEmpty       
+        validate: nonEmpty,
+        validate: uniqueId       
     },
     {
         type: 'input',
@@ -121,6 +134,7 @@ const addTeamMember = () => inquirer.prompt([
                     .then((eng) =>{
                         const engineer = new Engineer(response.name, response.id, response.email, eng.github)
                         employees.push(engineer) 
+                        idArr.push(response.id)
                         // ask again if the user wants to add new team member
                         addTeamMember();
                     })
@@ -139,6 +153,7 @@ const addTeamMember = () => inquirer.prompt([
                     .then((int) => {                       
                         const intern = new Intern(response.name, response.id, response.email, int.school)
                         employees.push(intern) 
+                        idArr.push(response.id)
                         // ask again if a user wants to add another team member
                         addTeamMember();                        
                     })
@@ -178,6 +193,7 @@ const init = async () => {
         const manager = new Manager(data.name, data.id, data.email, data.office)
         // put that instance to employees array
         employees.push(manager);
+        idArr.push(data.id)
         
         //await makes sure this function will not run until the promise from above is resolved
         await addTeamMember() 

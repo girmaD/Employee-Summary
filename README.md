@@ -31,6 +31,8 @@ Since testing is a key piece in making a code maintainable, unit tests were made
 - when you reach at the point where you don't have team members to add - say 'no'
 - html file will the summary of all entered team members will be created in the 'output' folder
 - [Watch the video](https://drive.google.com/file/d/1_1xdBzN6WPS4eXw1CZP-aIWoQ4NAW5ik/view?usp=sharing)
+- a snap shot of the html created may look like this
+- ![Alt text](./Assets/team.png)
 
 ## Contributing Guidelines
  * contact me on the email provided below
